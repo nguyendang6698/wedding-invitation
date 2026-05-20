@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Wedding Celebration</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-primary: #FAFAFA;
+            --bg-secondary: #F5EBE6;
+            --accent-gold: #C5A059;
+            --accent-gold-light: #E6D5B8;
+            --text-dark: #2C2C2C;
+            --text-muted: #666666;
+            --font-serif: 'Playfair Display', Georgia, serif;
+            --font-sans: 'Montserrat', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-primary);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Background Music Toggle Hint */
+        .music-hint {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            border: 1px solid var(--accent-gold-light);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .music-hint:hover {
+            transform: translateY(-3px);
+            background: #fff;
+        }
+
+        /* Decorative Gold Particles Background */
+        .particles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(197,160,89,0.3) 0%, rgba(197,160,89,0) 70%);
+            border-radius: 50%;
+            animation: floatUp 12s infinite linear;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(105vh) translateX(0) scale(0.5); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-5vh) translateX(50px) scale(1.2); opacity: 0; }
+        }
+
+        /* Reusable Animation Classes via Intersection Observer */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1.2s cubic-bezier(0.215, 0.610, 0.355, 1), transform 1.2s cubic-bezier(0.215, 0.610, 0.355, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 1.5s ease, transform 1.5s cubic-bezier(0.215, 0.610, 0.355, 1);
+        }
+        .reveal-scale.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* --- SECTION 1: HERO SECTION --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            padding: 20px;
+            background: linear-gradient(to bottom, rgba(250,250,250,0) 80%, var(--bg-primary) 100%);
+        }
+
+        .hero-border {
+            position: absolute;
+            top: 40px;
+            bottom: 40px;
+            left: 40px;
+            right: 40px;
+            border: 1px solid rgba(197, 160, 89, 0.2);
+            pointer-events: none;
+            animation: fadeInBorder 2.5s ease forward;
+        }
+
+        @keyframes fadeInBorder {
+            from { opacity: 0; transform: scale(1.03); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .hero-sub {
+            font-size: 0.9rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 0.5s forwards;
+        }
+
+        .hero-title {
+            font-family: var(--font-serif);
+            font-size: 3.5rem;
+            font-weight: 400;
+            line-height: 1.2;
+            margin-bottom: 25px;
+            color: var(--text-dark);
+            opacity: 0;
+            animation: fadeInUp 1.5s ease 0.8s forwards;
+        }
+        
+        .hero-title span {
+            font-style: italic;
+            font-family: var(--font-serif);
+            color: var(--accent-gold);
+            display: block;
+            font-size: 2.5rem;
+            margin: 10px 0;
+        }
+
+        .hero-date {
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            border-top: 1px solid var(--accent-gold-light);
+            border-bottom: 1px solid var(--accent-gold-light);
+            padding: 8px 30px;
+            display: inline-block;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease 1.1s forwards;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            opacity: 0;
+            animation: fadeIn 2s ease 1.8s forwards;
+        }
+        .scroll-indicator::after {
+            content: '';
+            display: block;
+            width: 1px;
+            height: 40px;
+            background-color: var(--accent-gold);
+            margin: 10px auto 0;
+            animation: bounceLine 2s infinite ease-in-out;
+        }
+
+        @keyframes bounceLine {
+            0%, 100% { height: 30px; transform: translateY(0); opacity: 0.4; }
+            50% { height: 45px; transform: translateY(5px); opacity: 1; }
+        }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+
+
+        /* --- SECTION 2: OUR STORY --- */
+        .story {
+            padding: 120px 20px;
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-header h2 {
+            font-family: var(--font-serif);
+            font-size: 2.5rem;
+            color: var(--text-dark);
+            font-weight: 400;
+        }
+
+        .section-header p {
+            color: var(--accent-gold);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-top: 10px;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 1px;
+            background-color: var(--accent-gold-light);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            margin-bottom: 60px;
+            position: relative;
+            width: 50%;
+            padding: 0 40px;
+        }
+        .timeline-item:nth-child(odd) {
+            left: 0;
+            text-align: right;
+        }
+        .timeline-item:nth-child(even) {
+            left: 50%;
+            text-align: left;
+        }
+
+        .timeline-dot {
+            width: 12px;
+            height: 12px;
+            background-color: var(--accent-gold);
+            border-radius: 50%;
+            position: absolute;
+            top: 5px;
+            left: 100%;
+            transform: translateX(-50%);
+            z-index: 3;
+            transition: transform 0.3s ease;
+        }
+        .timeline-item:nth-child(even) .timeline-dot {
+            left: 0;
+        }
+        .timeline-item:hover .timeline-dot {
+            transform: translateX(-50%) scale(1.5);
+        }
+
+        .timeline-date {
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            color: var(--accent-gold);
+            margin-bottom: 5px;
+            font-style: italic;
+        }
+
+        .timeline-content h3 {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .timeline-content p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+
+        /* --- SECTION 3: THE GALLERY --- */
+        .gallery {
+            background-color: var(--bg-secondary);
+            padding: 120px 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .gallery-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 3 / 4;
+            background-color: #EAEAEA;
+            border-radius: 4px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            cursor: pointer;
+        }
+
+        .gallery-placeholder-art {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid rgba(197, 160, 89, 0.1);
+            position: relative;
+            transition: transform 1.2s cubic-bezier(0.15, 0.85, 0.3, 1);
+        }
+        .gallery-placeholder-art::before {
+            content: '';
+            position: absolute;
+            width: 70%;
+            height: 70%;
+            border: 1px solid rgba(197, 160, 89, 0.2);
+            transform: rotate(45deg);
+            transition: transform 1.5s ease;
+        }
+
+        .gallery-item:hover .gallery-placeholder-art {
+            transform: scale(1.05);
+        }
+        .gallery-item:hover .gallery-placeholder-art::before {
+            transform: rotate(90deg);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(44, 44, 44, 0.4);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-text {
+            color: #FFF;
+            font-family: var(--font-serif);
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--accent-gold-light);
+            padding-bottom: 5px;
+            transform: translateY(15px);
+            transition: transform 0.5s cubic-bezier(0.15, 0.85, 0.3, 1);
+        }
+        .gallery-item:hover .gallery-text {
+            transform: translateY(0);
+        }
+
+
+        /* --- SECTION 4: GUESTBOOK --- */
+        .guestbook {
+            padding: 120px 20px;
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease;
+        }
+        .form-group.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-gold);
+            margin-bottom: 8px;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-bottom: 1px solid var(--accent-gold-light);
+            background-color: transparent;
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            transition: border-color 0.3s ease;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-bottom-color: var(--accent-gold);
+        }
+
+        .submit-btn {
+            background-color: var(--accent-gold);
+            color: #FFF;
+            border: none;
+            padding: 15px 40px;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            border-radius: 0;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(197,160,89,0.2);
+            transition: all 0.4s cubic-bezier(0.15, 0.85, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .submit-btn:hover {
+            background-color: var(--text-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .success-animation {
+            display: none;
+            margin-top: 20px;
+            color: var(--accent-gold);
+            font-family: var(--font-serif);
+            font-style: italic;
+            animation: fadeIn 1s ease forwards;
+        }
+
+
+        /* --- FOOTER --- */
+        footer {
+            padding: 60px 20px;
+            text-align: center;
+            background-color: var(--bg-primary);
+            border-top: 1px solid rgba(197, 160, 89, 0.1);
+            position: relative;
+            z-index: 2;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.5rem; }
+            .hero-title span { font-size: 1.8rem; }
+            .timeline::before { left: 20px; }
+            .timeline-item { width: 100%; padding-left: 50px; padding-right: 0; text-align: left !important; }
+            .timeline-item:nth-child(even) { left: 0; }
+            .timeline-dot { left: 20px !important; }
+            .gallery-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient Gold Dust Floating Effect -->
+    <div class="particles-container" id="particles"></div>
+
+    <!-- Sticky subtle audio trigger notification -->
+    <div class="music-hint" onclick="alert('Tính năng phát nhạc nền có thể được tích hợp mượt mà tại đây bằng tệp âm thanh của bạn!')">
+        <span style="display:inline-block; width:8px; height:8px; background:var(--accent-gold); border-radius:50%;"></span>
+        Melody of Love.mp3
+    </div>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-border"></div>
+        <p class="hero-sub">Chào mừng bạn đến với ngày chung đôi</p>
+        <h1 class="hero-title">
+            Nguyễn Công Đức
+            <span>&</span> 
+            Trình Hoàng Nga
+        </h1>
+        <p class="hero-date">05 . 23 . 2026</p>
+        <div class="scroll-indicator">Cuộn chuột để khám phá</div>
+    </section>
+
+    <!-- OUR STORY SECTION -->
+    <section class="story">
+        <div class="section-header reveal">
+            <h2>Hành Trình Tình Yêu</h2>
+            <p>Our Story</p>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-item reveal">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Tháng 10, 2022</div>
+                <div class="timeline-content">
+                    <h3>Lần Đầu Gặp Gỡ</h3>
+                    <p>Giữa thành phố đầy nắng và gió, hai tâm hồn xa lạ vô tình chạm vào tần số của nhau.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item reveal">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Tháng 02, 2024</div>
+                <div class="timeline-content">
+                    <h3>Lời Tỏ Tình Ngọt Ngào</h3>
+                    <p>Một ngày kỷ niệm ngập tràn hoa hồng và những lời hứa hẹn chân thành về một tương lai có nhau.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item reveal">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Tháng 12, 2025</div>
+                <div class="timeline-content">
+                    <h3>Cái Gật Đầu Đồng Ý</h3>
+                    <p>Dưới ánh hoàng hôn lãng mạn, chiếc nhẫn cầu hôn đã tìm thấy chủ nhân của nó trong niềm hạnh phúc vỡ òa.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GALLERY SECTION -->
+    <section class="gallery">
+        <div class="section-header reveal">
+            <h2>Góc Kỷ Niệm</h2>
+            <p>Những khoảnh khắc khắc cốt ghi tâm</p>
+        </div>
+
+        <div class="gallery-grid">
+            <div class="gallery-item reveal-scale">
+                <div class="gallery-placeholder-art"></div>
+                <div class="gallery-overlay">
+                    <div class="gallery-text">Nụ cười rạng rỡ</div>
+                </div>
+            </div>
+            <div class="gallery-item reveal-scale">
+                <div class="gallery-placeholder-art"></div>
+                <div class="gallery-overlay">
+                    <div class="gallery-text">Ánh mắt chạm nhau</div>
+                </div>
+            </div>
+            <div class="gallery-item reveal-scale">
+                <div class="gallery-placeholder-art"></div>
+                <div class="gallery-overlay">
+                    <div class="gallery-text">Tay trong tay bước tiếp</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GUESTBOOK SECTION -->
+    <section class="guestbook">
+        <div class="section-header reveal">
+            <h2>Gửi Lời Chúc Phúc</h2>
+            <p>Món quà tinh thần ý nghĩa nhất</p>
+        </div>
+
+        <form id="wishForm" onsubmit="submitWish(event)">
+            <div class="form-group reveal-form">
+                <label for="name">Tên của bạn</label>
+                <input type="text" id="name" required placeholder="Nhập tên của bạn...">
+            </div>
+            <div class="form-group reveal-form">
+                <label for="message">Lời chúc</label>
+                <textarea id="message" rows="4" required placeholder="Gửi những lời chúc tốt đẹp nhất đến cặp đôi..."></textarea>
+            </div>
+            <button type="submit" class="submit-btn reveal">Gửi Lời Chúc</button>
+        </form>
+        <div class="success-animation" id="successMsg">
+            ✨ Lời chúc của bạn đã bay đến hòm thư hạnh phúc! Cảm ơn bạn rất nhiều. ✨
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>Wedding Gift © 2026</p>
+        <p style="margin-top: 5px; font-size: 0.7rem; color: #aaa;">Designed with absolute elegance and love</p>
+    </footer>
+
+    <!-- INTERACTIVE JAVASCRIPT FOR ANIMATIONS -->
+    <script>
+        // 1. Generate elegant dynamic floating gold particles
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = 20;
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            // Randomize starting states for organic floating feel
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.width = `${Math.random() * 6 + 2}px`;
+            particle.style.height = particle.style.width;
+            particle.style.animationDelay = `${Math.random() * 10}s`;
+            particle.style.animationDuration = `${Math.random() * 8 + 8}s`;
+            
+            particlesContainer.appendChild(particle);
+        }
+
+        // 2. Intersection Observer to trigger elegant scroll-driven reveals
+        const revealElements = document.querySelectorAll('.reveal, .reveal-scale, .reveal-form');
+        
+        const observerOptions = {
+            root: null,
+            threshold: 0.15,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    // Once animated, no need to track again to keep execution clean
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        revealElements.forEach(element => {
+            revealObserver.observe(element);
+        });
+
+        // Trigger reveal-form specifically with staggered effect
+        setTimeout(() => {
+            document.querySelectorAll('.reveal-form').forEach((el, index) => {
+                setTimeout(() => {
+                    el.classList.add('active');
+                }, index * 200);
+            });
+        }, 100);
+
+        // 3. Form Submission Interaction
+        function submitWish(event) {
+            event.preventDefault();
+            const btn = document.querySelector('.submit-btn');
+            const successMsg = document.getElementById('successMsg');
+            
+            btn.style.transform = 'scale(0.95)';
+            btn.style.opacity = '0.5';
+            
+            setTimeout(() => {
+                document.getElementById('wishForm').style.display = 'none';
+                successMsg.style.display = 'block';
+            }, 800);
+        }
+    </script>
+</body>
+</html>
