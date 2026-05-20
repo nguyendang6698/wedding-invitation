@@ -336,31 +336,17 @@
             cursor: pointer;
         }
 
-        .gallery-placeholder-art {
+        /* Tối ưu hóa việc căn chỉnh tiêu cự hiển thị hình ảnh */
+        .gallery-img {
             width: 100%;
             height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 1px solid rgba(197, 160, 89, 0.1);
-            position: relative;
+            object-fit: cover;
+            display: block;
             transition: transform 1.2s cubic-bezier(0.15, 0.85, 0.3, 1);
         }
-        .gallery-placeholder-art::before {
-            content: '';
-            position: absolute;
-            width: 70%;
-            height: 70%;
-            border: 1px solid rgba(197, 160, 89, 0.2);
-            transform: rotate(45deg);
-            transition: transform 1.5s ease;
-        }
 
-        .gallery-item:hover .gallery-placeholder-art {
+        .gallery-item:hover .gallery-img {
             transform: scale(1.05);
-        }
-        .gallery-item:hover .gallery-placeholder-art::before {
-            transform: rotate(90deg);
         }
 
         .gallery-overlay {
@@ -369,13 +355,13 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(44, 44, 44, 0.4);
+            background: linear-gradient(to bottom, rgba(44,44,44,0) 50%, rgba(44,44,44,0.6) 100%);
             opacity: 0;
             transition: opacity 0.4s ease;
             display: flex;
             justify-content: center;
-            align-items: center;
-            padding: 20px;
+            align-items: flex-end;
+            padding: 30px 20px;
         }
         .gallery-item:hover .gallery-overlay {
             opacity: 1;
@@ -396,84 +382,84 @@
         }
 
 
-        /* --- SECTION 4: GUESTBOOK --- */
-        .guestbook {
+        /* --- SECTION 4: INTERACTIVE SECRET LETTER --- */
+        .secret-letter-section {
             padding: 120px 20px;
             position: relative;
             z-index: 2;
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
             text-align: center;
         }
 
-        .form-group {
-            margin-bottom: 25px;
-            text-align: left;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.8s ease;
-        }
-        .form-group.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--accent-gold);
-            margin-bottom: 8px;
-        }
-
-        .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: none;
-            border-bottom: 1px solid var(--accent-gold-light);
-            background-color: transparent;
-            font-family: var(--font-sans);
-            font-size: 0.95rem;
-            color: var(--text-dark);
-            transition: border-color 0.3s ease;
-        }
-        .form-group input:focus, .form-group textarea:focus {
-            outline: none;
-            border-bottom-color: var(--accent-gold);
-        }
-
-        .submit-btn {
+        .open-letter-btn {
             background-color: var(--accent-gold);
             color: #FFF;
             border: none;
-            padding: 15px 40px;
+            padding: 18px 45px;
             font-family: var(--font-sans);
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 3px;
-            border-radius: 0;
             cursor: pointer;
             box-shadow: 0 5px 20px rgba(197,160,89,0.2);
             transition: all 0.4s cubic-bezier(0.15, 0.85, 0.3, 1);
-            position: relative;
-            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
         }
-        .submit-btn:hover {
+        .open-letter-btn:hover {
             background-color: var(--text-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
 
-        .success-animation {
+        .letter-card {
             display: none;
-            margin-top: 20px;
-            color: var(--accent-gold);
+            opacity: 0;
+            transform: translateY(30px);
+            background: #FFF;
+            padding: 60px 45px;
+            border: 1px solid var(--accent-gold-light);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+            margin-top: 30px;
+            text-align: left;
+            position: relative;
+        }
+        
+        .letter-card::before {
+            content: '“';
             font-family: var(--font-serif);
-            font-style: italic;
-            animation: fadeIn 1s ease forwards;
+            font-size: 7rem;
+            color: var(--bg-secondary);
+            position: absolute;
+            top: -15px;
+            left: 25px;
+            line-height: 1;
+            z-index: 0;
         }
 
+        .letter-card p {
+            position: relative;
+            z-index: 1;
+            font-family: var(--font-serif);
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--text-dark);
+            margin-bottom: 22px;
+        }
+
+        .letter-signature {
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-gold);
+            text-align: right;
+            margin-top: 50px;
+            border-top: 1px solid var(--bg-secondary);
+            padding-top: 25px;
+        }
 
         /* --- FOOTER --- */
         footer {
@@ -488,7 +474,6 @@
             letter-spacing: 1px;
         }
 
-
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .hero-title { font-size: 2.5rem; }
@@ -498,21 +483,19 @@
             .timeline-item:nth-child(even) { left: 0; }
             .timeline-dot { left: 20px !important; }
             .gallery-grid { grid-template-columns: 1fr; }
+            .letter-card { padding: 35px 25px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Ambient Gold Dust Floating Effect -->
     <div class="particles-container" id="particles"></div>
 
-    <!-- Sticky subtle audio trigger notification -->
     <div class="music-hint" onclick="alert('Tính năng phát nhạc nền có thể được tích hợp mượt mà tại đây bằng tệp âm thanh của bạn!')">
         <span style="display:inline-block; width:8px; height:8px; background:var(--accent-gold); border-radius:50%;"></span>
         Melody of Love.mp3
     </div>
 
-    <!-- HERO SECTION -->
     <section class="hero">
         <div class="hero-border"></div>
         <p class="hero-sub">Chào mừng bạn đến với ngày chung đôi</p>
@@ -525,7 +508,6 @@
         <div class="scroll-indicator">Cuộn chuột để khám phá</div>
     </section>
 
-    <!-- OUR STORY SECTION -->
     <section class="story">
         <div class="section-header reveal">
             <h2>Hành Trình Tình Yêu</h2>
@@ -562,61 +544,64 @@
         </div>
     </section>
 
-    <!-- GALLERY SECTION -->
     <section class="gallery">
+        <div class="section-header reveal">
+            <h2>Góc Kỷ Niệm</h2>
+            <p>Những khoảnh khắc khắc cốt ghi tâm</p>
+        </div>
+
         <div class="gallery-grid">
             <div class="gallery-item reveal-scale">
-                <img src="assets/Duc1.jpg" alt="Khoảnh khắc rạng rỡ" class="gallery-img">
+                <img src="assets/Duc1.jpg" alt="Khoảnh khắc rạng rỡ" class="gallery-img" style="object-position: center 20%;">
                 <div class="gallery-overlay">
-            <div class="gallery-text">Nụ cười rạng rỡ</div>
-        </div>
-        </div>
+                    <div class="gallery-text">Nụ cười rạng rỡ</div>
+                </div>
+            </div>
+            
             <div class="gallery-item reveal-scale">
-                <img src="assets/Duc2.jpg" alt="Ánh mắt chạm nhau" class="gallery-img">
+                <img src="assets/Duc2.jpg" alt="Ánh mắt chạm nhau" class="gallery-img" style="object-position: center center;">
                 <div class="gallery-overlay">
-            <div class="gallery-text">Ánh mắt chạm nhau</div>
+                    <div class="gallery-text">Ánh mắt chạm nhau</div>
+                </div>
+            </div>
+            
+            <div class="gallery-item reveal-scale">
+                <img src="assets/Duc3.jpg" alt="Tay trong tay bước tiếp" class="gallery-img" style="object-position: center center;">
+                <div class="gallery-overlay">
+                    <div class="gallery-text">Tay trong tay bước tiếp</div>
+                </div>
+            </div>
         </div>
-    </div>
-        <div class="gallery-item reveal-scale">
-            <img src="assets/Duc3.jpg" alt="Tay trong tay bước tiếp" class="gallery-img">
-            <div class="gallery-overlay">
-            <div class="gallery-text">Tay trong tay bước tiếp</div>
-        </div>
-    </div>
-</div>
-        
     </section>
 
-    <!-- GUESTBOOK SECTION -->
-    <section class="guestbook">
+    <section class="secret-letter-section">
         <div class="section-header reveal">
-            <h2>Gửi Lời Chúc Phúc</h2>
-            <p>Món quà tinh thần ý nghĩa nhất</p>
+            <h2>Hộp Thư Hạnh Phúc</h2>
+            <p>Một món quà bất ngờ dành cho Đức và Nga</p>
         </div>
 
-        <form id="wishForm" onsubmit="submitWish(event)">
-            <div class="form-group reveal-form">
-                <label for="name">DatNT200</label>
-                <input type="text" id="name" required placeholder="Nhập tên của bạn...">
+        <button class="open-letter-btn reveal" id="openLetterBtn" onclick="revealLetter()">
+            Mở tâm thư chúc phúc
+        </button>
+
+        <div class="letter-card" id="secretMessage">
+            <p>Gửi Đức và Nga,</p>
+            <p>Hôn nhân không phải là đích đến cuối cùng, mà chính là sự khởi đầu cho một hành trình tuyệt đẹp cùng nhau vun đắp. Chúc hai bạn luôn giữ vững ngọn lửa yêu thương bền chặt như ngày đầu, luôn thấu hiểu, bao dung và cùng nhau đi qua mọi thăng trầm.</p>
+            <p>Trang web kỷ niệm nhỏ này là tất cả sự trân trọng và chúc phúc mà mình tự tay hoàn thiện để dành tặng hai bạn. Mong rằng đây sẽ là một góc nhỏ lưu giữ trọn vẹn những khoảnh khắc rực rỡ nhất trong ngày chung đôi.</p>
+            <p>Chúc hai bạn trăm năm tình viên mãn, bạc đầu nghĩa phu thê!</p>
+            
+            <div class="letter-signature">
+                Former FPT-er,<br>
+                <strong>ĐạtNT200</strong>
             </div>
-            <div class="form-group reveal-form">
-                <label for="message">Lời chúc</label>
-                <textarea id="message" rows="4" required placeholder="Gửi những lời chúc tốt đẹp nhất đến cặp đôi..."></textarea>
-            </div>
-            <button type="submit" class="submit-btn reveal">Gửi Lời Chúc</button>
-        </form>
-        <div class="success-animation" id="successMsg">
-            ✨ Lời chúc của bạn đã bay đến hòm thư hạnh phúc! Cảm ơn bạn rất nhiều. ✨
         </div>
     </section>
 
-    <!-- FOOTER -->
     <footer>
         <p>Wedding Gift © 2026</p>
-        <p style="margin-top: 5px; font-size: 0.7rem; color: #aaa;">Designed with absolute elegance and love</p>
+        <p style="margin-top: 5px; font-size: 0.7rem; color: #aaa;">Handcrafted with absolute elegance and love by Thành Đạt</p>
     </footer>
 
-    <!-- INTERACTIVE JAVASCRIPT FOR ANIMATIONS -->
     <script>
         // 1. Generate elegant dynamic floating gold particles
         const particlesContainer = document.getElementById('particles');
@@ -626,7 +611,6 @@
             const particle = document.createElement('div');
             particle.classList.add('particle');
             
-            // Randomize starting states for organic floating feel
             particle.style.left = `${Math.random() * 100}%`;
             particle.style.width = `${Math.random() * 6 + 2}px`;
             particle.style.height = particle.style.width;
@@ -637,7 +621,7 @@
         }
 
         // 2. Intersection Observer to trigger elegant scroll-driven reveals
-        const revealElements = document.querySelectorAll('.reveal, .reveal-scale, .reveal-form');
+        const revealElements = document.querySelectorAll('.reveal, .reveal-scale');
         
         const observerOptions = {
             root: null,
@@ -649,7 +633,6 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('active');
-                    // Once animated, no need to track again to keep execution clean
                     observer.unobserve(entry.target);
                 }
             });
@@ -659,28 +642,26 @@
             revealObserver.observe(element);
         });
 
-        // Trigger reveal-form specifically with staggered effect
-        setTimeout(() => {
-            document.querySelectorAll('.reveal-form').forEach((el, index) => {
-                setTimeout(() => {
-                    el.classList.add('active');
-                }, index * 200);
-            });
-        }, 100);
-
-        // 3. Form Submission Interaction
-        function submitWish(event) {
-            event.preventDefault();
-            const btn = document.querySelector('.submit-btn');
-            const successMsg = document.getElementById('successMsg');
+        // 3. Interactive Letter Reveal Function
+        function revealLetter() {
+            const btn = document.getElementById('openLetterBtn');
+            const message = document.getElementById('secretMessage');
             
-            btn.style.transform = 'scale(0.95)';
-            btn.style.opacity = '0.5';
+            btn.style.opacity = '0';
+            btn.style.transform = 'translateY(-10px)';
+            btn.style.transition = 'all 0.4s ease';
             
             setTimeout(() => {
-                document.getElementById('wishForm').style.display = 'none';
-                successMsg.style.display = 'block';
-            }, 800);
+                btn.style.display = 'none';
+                message.style.display = 'block';
+                
+                // Trigger smooth CSS animation via micro-task
+                requestAnimationFrame(() => {
+                    message.style.transition = 'all 1s cubic-bezier(0.215, 0.610, 0.355, 1)';
+                    message.style.opacity = '1';
+                    message.style.transform = 'translateY(0)';
+                });
+            }, 400);
         }
     </script>
 </body>
