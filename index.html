@@ -34,27 +34,150 @@
             scroll-behavior: smooth;
         }
 
-        /* Background Music Toggle Hint */
-        .music-hint {
+        /* Background Music Toggle */
+        .music-toggle {
             position: fixed;
             bottom: 30px;
             right: 30px;
             z-index: 100;
-            background: rgba(255, 255, 255, 0.85);
-            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 18px 10px 14px;
             border-radius: 30px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.05);
             border: 1px solid var(--accent-gold-light);
-            font-size: 0.85rem;
+            font-size: 0.8rem;
+            font-family: var(--font-sans);
+            color: var(--text-muted);
             display: flex;
             align-items: center;
             gap: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        .music-hint:hover {
+        .music-toggle:hover {
             transform: translateY(-3px);
             background: #fff;
+            color: var(--text-dark);
+        }
+        .music-toggle:focus-visible {
+            outline: 2px solid var(--accent-gold);
+            outline-offset: 2px;
+        }
+        .music-toggle__icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--accent-gold-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: var(--accent-gold);
+        }
+        .music-toggle__icon svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+        .music-toggle.is-playing .music-toggle__icon {
+            background: var(--accent-gold);
+            border-color: var(--accent-gold);
+            color: #fff;
+            animation: musicPulse 2s ease-in-out infinite;
+        }
+        @keyframes musicPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.35); }
+            50% { box-shadow: 0 0 0 8px rgba(197, 160, 89, 0); }
+        }
+        .music-toggle__label {
+            max-width: 140px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            letter-spacing: 0.5px;
+        }
+        @media (max-width: 768px) {
+            .music-toggle {
+                bottom: 20px;
+                right: 20px;
+                padding: 8px 14px 8px 10px;
+            }
+            .music-toggle__label {
+                max-width: 100px;
+                font-size: 0.75rem;
+            }
+        }
+
+        /* Welcome overlay — một lần chạm để trình duyệt cho phép phát nhạc */
+        .welcome-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 24px;
+            background: var(--bg-primary);
+            cursor: pointer;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+        body.welcome-open .page-content {
+            visibility: hidden;
+        }
+        body.welcome-open .music-toggle {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .welcome-overlay.is-hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        body.welcome-open {
+            overflow: hidden;
+        }
+        .welcome-overlay__ring {
+            width: 120px;
+            height: 120px;
+            border: 1px solid var(--accent-gold-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 28px;
+            animation: welcomePulse 2.5s ease-in-out infinite;
+        }
+        .welcome-overlay__ring span {
+            font-family: var(--font-serif);
+            font-size: 2.5rem;
+            color: var(--accent-gold);
+            font-style: italic;
+        }
+        @keyframes welcomePulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.15); }
+            50% { transform: scale(1.03); box-shadow: 0 0 0 12px rgba(197, 160, 89, 0); }
+        }
+        .welcome-overlay__sub {
+            font-size: 0.75rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            margin-bottom: 12px;
+        }
+        .welcome-overlay__title {
+            font-family: var(--font-serif);
+            font-size: 1.75rem;
+            font-weight: 400;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+        .welcome-overlay__hint {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
         }
 
         /* Decorative Gold Particles Background */
@@ -106,15 +229,53 @@
         /* --- SECTION 1: HERO SECTION --- */
         .hero {
             height: 100vh;
+            min-height: 560px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
             text-align: center;
             position: relative;
             z-index: 2;
-            padding: 20px;
-            background: linear-gradient(to bottom, rgba(250,250,250,0) 80%, var(--bg-primary) 100%);
+            padding: min(14vh, 110px) 20px 20px;
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: url('assets/DangAnh1.JPG') center 30% / cover no-repeat;
+            transform: scale(1.04);
+            animation: heroBgIn 2s ease forwards;
+        }
+
+        @keyframes heroBgIn {
+            from { transform: scale(1.08); opacity: 0; }
+            to { transform: scale(1.04); opacity: 1; }
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                180deg,
+                rgba(250, 250, 250, 0.92) 0%,
+                rgba(250, 250, 250, 0.72) 38%,
+                rgba(250, 250, 250, 0.45) 62%,
+                rgba(250, 250, 250, 0.88) 100%
+            );
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 720px;
         }
 
         .hero-border {
@@ -123,9 +284,10 @@
             bottom: 40px;
             left: 40px;
             right: 40px;
-            border: 1px solid rgba(197, 160, 89, 0.2);
+            border: 1px solid rgba(197, 160, 89, 0.35);
             pointer-events: none;
-            animation: fadeInBorder 2.5s ease forward;
+            z-index: 3;
+            animation: fadeInBorder 2.5s ease forwards;
         }
 
         @keyframes fadeInBorder {
@@ -163,16 +325,32 @@
             margin: 10px 0;
         }
 
+        .hero-dates {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px 32px;
+            margin-top: 8px;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease 1.1s forwards;
+        }
+        .hero-date-block {
+            text-align: center;
+            padding: 12px 28px;
+            border-top: 1px solid var(--accent-gold-light);
+            border-bottom: 1px solid var(--accent-gold-light);
+        }
+        .hero-date-label {
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            margin-bottom: 6px;
+        }
         .hero-date {
             font-size: 1.1rem;
             letter-spacing: 2px;
             color: var(--text-muted);
-            border-top: 1px solid var(--accent-gold-light);
-            border-bottom: 1px solid var(--accent-gold-light);
-            padding: 8px 30px;
-            display: inline-block;
-            opacity: 0;
-            animation: fadeInUp 1.5s ease 1.1s forwards;
         }
 
         @keyframes fadeInUp {
@@ -185,12 +363,14 @@
             bottom: 60px;
             left: 50%;
             transform: translateX(-50%);
+            z-index: 3;
             font-size: 0.75rem;
             letter-spacing: 2px;
             text-transform: uppercase;
             color: var(--accent-gold);
             opacity: 0;
             animation: fadeIn 2s ease 1.8s forwards;
+            text-shadow: 0 1px 12px rgba(255, 255, 255, 0.9);
         }
         .scroll-indicator::after {
             content: '';
@@ -461,6 +641,108 @@
             padding-top: 25px;
         }
 
+        /* --- SECTION: VENUES --- */
+        .venues {
+            background-color: var(--bg-secondary);
+            padding: 120px 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .venue-cards {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+        }
+
+        .venue-card {
+            background: #fff;
+            border: 1px solid var(--accent-gold-light);
+            border-radius: 4px;
+            padding: 40px 36px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.04);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .venue-card__tag {
+            font-size: 0.72rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            margin-bottom: 10px;
+        }
+
+        .venue-card__ceremony {
+            font-family: var(--font-serif);
+            font-size: 1.85rem;
+            font-weight: 400;
+            color: var(--text-dark);
+            margin-bottom: 14px;
+        }
+
+        .venue-card__datetime {
+            font-size: 1rem;
+            letter-spacing: 1px;
+            color: var(--text-dark);
+            font-weight: 500;
+            padding: 10px 22px;
+            border-top: 1px solid var(--accent-gold-light);
+            border-bottom: 1px solid var(--accent-gold-light);
+            margin-bottom: 24px;
+        }
+
+        .venue-card__place {
+            margin-bottom: 14px;
+        }
+
+        .venue-card__place strong {
+            display: block;
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            font-weight: 400;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .venue-card__place span {
+            font-size: 0.9rem;
+            color: var(--accent-gold);
+            letter-spacing: 1px;
+        }
+
+        .venue-card__address {
+            font-size: 0.92rem;
+            line-height: 1.7;
+            color: var(--text-muted);
+            max-width: 320px;
+            margin-bottom: 28px;
+        }
+
+        .venue-card__map {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #fff;
+            background-color: var(--accent-gold);
+            padding: 14px 28px;
+            text-decoration: none;
+            transition: all 0.35s cubic-bezier(0.15, 0.85, 0.3, 1);
+            margin-top: auto;
+        }
+
+        .venue-card__map:hover {
+            background-color: var(--text-dark);
+            transform: translateY(-2px);
+        }
+
         /* --- FOOTER --- */
         footer {
             padding: 60px 20px;
@@ -475,37 +757,85 @@
         }
 
         /* Responsive adjustments */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+        }
         @media (max-width: 768px) {
+            .hero {
+                padding-top: min(12vh, 88px);
+            }
+            .hero-bg {
+                background-position: center 22%;
+            }
+            .hero-border {
+                top: 24px;
+                bottom: 24px;
+                left: 16px;
+                right: 16px;
+            }
             .hero-title { font-size: 2.5rem; }
             .hero-title span { font-size: 1.8rem; }
+            .hero-dates { flex-direction: column; gap: 14px; }
+            .scroll-indicator { bottom: 80px; }
             .timeline::before { left: 20px; }
             .timeline-item { width: 100%; padding-left: 50px; padding-right: 0; text-align: left !important; }
             .timeline-item:nth-child(even) { left: 0; }
             .timeline-dot { left: 20px !important; }
             .gallery-grid { grid-template-columns: 1fr; }
+            .venue-cards { grid-template-columns: 1fr; gap: 24px; }
+            .venue-card { padding: 32px 24px; }
             .letter-card { padding: 35px 25px; }
         }
     </style>
 </head>
-<body>
+<body class="welcome-open">
+
+    <div class="welcome-overlay" id="welcomeOverlay" role="button" tabindex="0" aria-label="Chạm để mở thiệp và bật nhạc nền">
+        <div class="welcome-overlay__ring"><span>&</span></div>
+        <p class="welcome-overlay__sub">The Wedding Celebration</p>
+        <h2 class="welcome-overlay__title">Chạm để mở thiệp</h2>
+        <p class="welcome-overlay__hint">Nhạc nền sẽ vang lên</p>
+    </div>
 
     <div class="particles-container" id="particles"></div>
 
-    <div class="music-hint" onclick="alert('Tính năng phát nhạc nền có thể được tích hợp mượt mà tại đây bằng tệp âm thanh của bạn!')">
-        <span style="display:inline-block; width:8px; height:8px; background:var(--accent-gold); border-radius:50%;"></span>
-        Melody of Love.mp3
-    </div>
+    <!-- Đặt file nhạc của bạn tại: assets/melody.mp3 -->
+    <audio id="bgMusic" loop preload="metadata">
+        <source src="assets/melody.mp3" type="audio/mpeg">
+    </audio>
 
+    <button type="button" class="music-toggle" id="musicToggle" aria-label="Bật nhạc" aria-pressed="false">
+        <span class="music-toggle__icon" id="musicIcon" aria-hidden="true">
+            <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <svg class="icon-pause" viewBox="0 0 24 24" style="display:none"><path d="M6 5h4v14H6V5zm8 0h4v14h-4V5z"/></svg>
+        </span>
+        <span class="music-toggle__label" id="musicLabel">Bật nhạc</span>
+    </button>
+
+    <main class="page-content">
     <section class="hero">
+        <div class="hero-bg" aria-hidden="true"></div>
+        <div class="hero-overlay" aria-hidden="true"></div>
         <div class="hero-border"></div>
-        <p class="hero-sub">Chào mừng quý dị đến với ngày chung đôi</p>
-        <h1 class="hero-title">
-            Nguyễn Công Đức
-            <span>&</span> 
-            Trịnh Hoàng Nga
-        </h1>
-        <p class="hero-date">05 . 23 . 2026</p>
-        <div class="scroll-indicator">Kéo xuống để coi thêm</div>
+        <div class="hero-content">
+            <p class="hero-sub">Chào mừng quý vị đến với ngày chung đôi</p>
+            <h1 class="hero-title">
+                Nguyễn Tất Đang
+                <span>&</span> 
+                Trần Minh Ánh
+            </h1>
+            <div class="hero-dates">
+                <div class="hero-date-block">
+                    <p class="hero-date-label">Lễ Vu Quy</p>
+                    <p class="hero-date">06 . 13 . 2026</p>
+                </div>
+                <div class="hero-date-block">
+                    <p class="hero-date-label">Lễ Thành Hôn</p>
+                    <p class="hero-date">06 . 20 . 2026</p>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">Câu chuyện được kể tiếp bên dưới</div>
     </section>
 
     <section class="story">
@@ -517,58 +847,139 @@
         <div class="timeline">
             <div class="timeline-item reveal">
                 <div class="timeline-dot"></div>
-                <div class="timeline-date">Tháng này đấy, 2021</div>
+                <div class="timeline-date">Tháng 5, 2020</div>
                 <div class="timeline-content">
                     <h3>Lần Đầu Gặp Gỡ</h3>
-                    <p>Hai tâm hồn loạng choạng va chạm vào tần số của nhau.</p>
+                    <p>Tình cờ "quẹt phải" nhau.</p>
                 </div>
             </div>
 
             <div class="timeline-item reveal">
                 <div class="timeline-dot"></div>
-                <div class="timeline-date">Tháng nào đấy, 2024</div>
+                <div class="timeline-date">Tháng 6, 2020</div>
                 <div class="timeline-content">
-                    <h3>Đặt gạch lấy sổ gạo</h3>
-                    <p>Mình làm nhẹ 1 cái đám hỏi</p>
+                    <h3>Hành trình yêu xa, thực ra vẫn còn gần</h3>
+                    <p>Đà Nẵng - Huế</p>
                 </div>
             </div>
 
             <div class="timeline-item reveal">
                 <div class="timeline-dot"></div>
-                <div class="timeline-date">Tháng 5, 2026</div>
+                <div class="timeline-date">Tháng 12, 2022</div>
                 <div class="timeline-content">
-                    <h3>Về chung một nhà</h3>
+                    <h3>Yêu xa thật xa</h3>
+                    <p>Tokyo - TP. Hồ Chí Minh</p>
+                </div>
+            </div>
+
+            <div class="timeline-item reveal">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Tháng 7, 2025</div>
+                <div class="timeline-content">
+                    <h3>Hai gia đình lần đầu gặp mặt</h3>
+                    <p>Một buổi chạm ngõ ấm áp</p>
+                </div>
+            </div>
+
+            <div class="timeline-item reveal">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Tháng 6, 2026</div>
+                <div class="timeline-content">
+                    <h3>Tụi mình về chung một nhà</h3>
                     <p>Tèn tèn ten</p>
                 </div>
             </div>
         </div>
     </section>
 
+    <section class="venues" id="dia-diem">
+        <div class="section-header reveal">
+            <h2>Địa Điểm Tổ Chức</h2>
+            <p>Venue & Celebration</p>
+        </div>
+
+        <div class="venue-cards">
+            <article class="venue-card reveal">
+                <p class="venue-card__tag">Lễ Vu Quy</p>
+                <h3 class="venue-card__ceremony">Tiệc nhà gái</h3>
+                <p class="venue-card__datetime">11 giờ 00 · Thứ Bảy, 13/06/2026</p>
+                <div class="venue-card__place">
+                    <strong>Nhà hàng Hoa Phượng</strong>
+                    <span>Sảnh Victoria</span>
+                </div>
+                <p class="venue-card__address">
+                    280 Lê Duẩn (Cầu Đạo Long 2), Phường Bảo An, tỉnh Khánh Hòa
+                </p>
+                <a
+                    class="venue-card__map"
+                    href="https://www.google.com/maps/search/?api=1&query=Nhà+hàng+Hoa+Phượng+280+Lê+Duẩn+Phường+Bảo+An+Khánh+Hòa"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >Xem bản đồ</a>
+            </article>
+
+            <article class="venue-card reveal">
+                <p class="venue-card__tag">Lễ Thành Hôn</p>
+                <h3 class="venue-card__ceremony">Tiệc nhà trai</h3>
+                <p class="venue-card__datetime">11 giờ 00 · Thứ Bảy, 20/06/2026</p>
+                <div class="venue-card__place">
+                    <strong>Minh Toàn Galaxy Hotel</strong>
+                    <span>Sảnh Leo · Tầng 4</span>
+                </div>
+                <p class="venue-card__address">
+                    306 đường 2/9, Hòa Cường Bắc, Hải Châu, Đà Nẵng
+                </p>
+                <a
+                    class="venue-card__map"
+                    href="https://www.google.com/maps/search/?api=1&query=Minh+Toàn+Galaxy+Hotel+306+đường+2/9+Đà+Nẵng"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >Xem bản đồ</a>
+            </article>
+        </div>
+    </section>
+
     <section class="gallery">
         <div class="section-header reveal">
-            <h2>Góc Kỷ Niệm</h2>
-            <p>Những khoảnh khắc khắc cốt ghi tâm</p>
+            <h2>Góc Pre-Wedding</h2>
+            <p>Những hình ảnh trước lễ cưới</p>
         </div>
 
         <div class="gallery-grid">
             <div class="gallery-item reveal-scale">
-                <img src="assets/Duc1.jpg" alt="Khoảnh khắc rạng rỡ" class="gallery-img" style="object-position: center 20%;">
+                <img src="assets/DangAnh5.JPG" alt="Minh Ánh" class="gallery-img" style="object-position: center 20%;">
+                <div class="gallery-overlay">
+                    <div class="gallery-text">Minh Ánh - Cô dâu</div>
+                </div>
+            </div>
+            <div class="gallery-item reveal-scale">
+                <img src="assets/DangAnh6.jpg" alt="Tất Đang" class="gallery-img">
+                <div class="gallery-overlay">
+                    <div class="gallery-text">Tất Đang - Chú rể</div>
+                </div>
+            </div>
+            <div class="gallery-item reveal-scale">
+                <img src="assets/DangAnh4.jpg" alt="Ôm ôm" class="gallery-img">
+                <div class="gallery-overlay">
+                    <div class="gallery-text">Ôm ôm</div>
+                </div>
+            </div>
+            <div class="gallery-item reveal-scale">
+                <img src="assets/DangAnh2.JPG" alt="Khoảnh khắc rạng rỡ" class="gallery-img" style="object-position: center 20%;">
                 <div class="gallery-overlay">
                     <div class="gallery-text">Nụ cười rạng rỡ</div>
                 </div>
             </div>
-            
             <div class="gallery-item reveal-scale">
-                <img src="assets/Duc2.jpg" alt="Ánh mắt chạm nhau" class="gallery-img" style="object-position: center center;">
+                <img src="assets/DangAnh3.jpg" alt="Tháng 6 năm 2026" class="gallery-img">
                 <div class="gallery-overlay">
-                    <div class="gallery-text">Ánh mắt chạm nhau</div>
+                    <div class="gallery-text">Tháng 6 năm 2026</div>
                 </div>
             </div>
-            
             <div class="gallery-item reveal-scale">
-                <img src="assets/Duc3.jpg" alt="Tay trong tay bước tiếp" class="gallery-img" style="object-position: center center;">
+                <img src="assets/DangAnh7.jpg" alt="Chung đôi" class="gallery-img">
                 <div class="gallery-overlay">
-                    <div class="gallery-text">Tay trong tay bước tiếp</div>
+                    <div class="gallery-text">Chung đôi</div>
                 </div>
             </div>
         </div>
@@ -585,22 +996,18 @@
         </button>
 
         <div class="letter-card" id="secretMessage">
-            <p>Gửi Đức và Nga,</p>
-            <p>Hôn nhân không phải là đích đến cuối cùng, mà chính là sự khởi đầu cho một hành trình tuyệt đẹp cùng nhau vun đắp. Chúc hai bạn luôn giữ vững ngọn lửa yêu thương bền chặt như ngày đầu, luôn thấu hiểu, bao dung và cùng nhau đi qua mọi thăng trầm.</p>
-            <p>Trang web kỷ niệm nhỏ này là tất cả sự trân trọng và chúc phúc mà mình tự tay hoàn thiện để dành tặng hai bạn. Mong rằng đây sẽ là một góc nhỏ lưu giữ trọn vẹn những khoảnh khắc rực rỡ nhất trong ngày chung đôi.</p>
-            <p>Chúc hai bạn trăm năm tình viên mãn, bạc đầu nghĩa phu thê!</p>
+            <p>Thân gửi những người bạn của chúng mình,</p>
+            <p>Hôn nhân không phải là đích đến cuối cùng, mà chính là sự khởi đầu cho một hành trình tuyệt đẹp cùng nhau vun đắp. Chúng mình đã may mắn gặp gỡ, tìm hiểu, chấp nhận và yêu thương nhau.</p>
+            <p>Mong rằng những ai nhận được tấm thiệp nhỏ này, đều sẽ tìm được hạnh phúc của mình. Chúc những ai đã tìm được nửa kia của đời mình sẽ được bên nhau trọn đời.</p>
             
             <div class="letter-signature">
-                Former FPT-er,<br>
-                <strong>ĐạtNT200</strong>
+                Thân mến,<br>
+                <strong>Đang và Ánh</strong>
             </div>
         </div>
     </section>
 
-    <footer>
-        <p>Wedding Gift © 2026</p>
-        <p style="margin-top: 5px; font-size: 0.7rem; color: #aaa;">Handcrafted by Đạt Nguyễn</p>
-    </footer>
+    </main>
 
     <script>
         // 1. Generate elegant dynamic floating gold particles
@@ -642,7 +1049,102 @@
             revealObserver.observe(element);
         });
 
-        // 3. Interactive Letter Reveal Function
+        // Luôn về đầu trang khi reload / mở thiệp (tránh trình duyệt nhớ vị trí cuộn cũ)
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+        function scrollToTop() {
+            window.scrollTo(0, 0);
+        }
+        scrollToTop();
+        window.addEventListener('load', scrollToTop);
+        window.addEventListener('pageshow', () => {
+            if (document.body.classList.contains('welcome-open')) {
+                scrollToTop();
+            }
+        });
+
+        // 3. Background music — cần chạm màn hình trước (chính sách trình duyệt), sau đó phát sau 2s
+        const bgMusic = document.getElementById('bgMusic');
+        const musicToggle = document.getElementById('musicToggle');
+        const musicLabel = document.getElementById('musicLabel');
+        const musicIcon = document.getElementById('musicIcon');
+        const welcomeOverlay = document.getElementById('welcomeOverlay');
+        const iconPlay = musicIcon.querySelector('.icon-play');
+        const iconPause = musicIcon.querySelector('.icon-pause');
+        const MUSIC_VOLUME = 0.45;
+        const AUTOPLAY_DELAY_MS = 2000;
+        let musicScheduled = false;
+
+        bgMusic.volume = MUSIC_VOLUME;
+
+        function setMusicUI(playing) {
+            musicToggle.classList.toggle('is-playing', playing);
+            musicToggle.setAttribute('aria-pressed', playing ? 'true' : 'false');
+            musicToggle.setAttribute('aria-label', playing ? 'Tắt nhạc' : 'Bật nhạc');
+            musicLabel.textContent = playing ? 'Đang phát' : 'Bật nhạc';
+            iconPlay.style.display = playing ? 'none' : 'block';
+            iconPause.style.display = playing ? 'block' : 'none';
+        }
+
+        async function playMusic() {
+            try {
+                await bgMusic.play();
+                setMusicUI(true);
+                return true;
+            } catch (err) {
+                if (err.name !== 'NotAllowedError') {
+                    console.warn('Không phát được nhạc:', err);
+                }
+                return false;
+            }
+        }
+
+        function dismissWelcome() {
+            welcomeOverlay.classList.add('is-hidden');
+            document.body.classList.remove('welcome-open');
+            setTimeout(() => welcomeOverlay.remove(), 700);
+        }
+
+        function scheduleMusicAfterUnlock() {
+            if (musicScheduled) return;
+            musicScheduled = true;
+            scrollToTop();
+            dismissWelcome();
+            setTimeout(() => playMusic(), AUTOPLAY_DELAY_MS);
+        }
+
+        function onWelcomeActivate(e) {
+            if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
+            if (e.type === 'keydown') e.preventDefault();
+            scheduleMusicAfterUnlock();
+        }
+
+        welcomeOverlay.addEventListener('click', onWelcomeActivate);
+        welcomeOverlay.addEventListener('keydown', onWelcomeActivate);
+
+        async function toggleMusic() {
+            if (bgMusic.paused) {
+                const ok = await playMusic();
+                if (!ok) musicLabel.textContent = 'Bấm để bật nhạc';
+            } else {
+                bgMusic.pause();
+                setMusicUI(false);
+            }
+        }
+
+        musicToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMusic();
+        });
+
+        bgMusic.addEventListener('ended', () => setMusicUI(false));
+        bgMusic.addEventListener('pause', () => {
+            if (bgMusic.paused) setMusicUI(false);
+        });
+        bgMusic.addEventListener('play', () => setMusicUI(true));
+
+        // 4. Interactive Letter Reveal Function
         function revealLetter() {
             const btn = document.getElementById('openLetterBtn');
             const message = document.getElementById('secretMessage');
