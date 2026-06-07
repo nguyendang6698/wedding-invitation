@@ -742,7 +742,23 @@
             line-height: 1.7;
             color: var(--text-muted);
             max-width: 320px;
-            margin-bottom: 28px;
+            margin-bottom: 20px;
+        }
+
+        .venue-card__map-wrap {
+            width: 100%;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid var(--accent-gold-light);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+        }
+
+        .venue-card__map-wrap iframe {
+            display: block;
+            width: 100%;
+            height: 220px;
+            border: 0;
         }
 
         .venue-card__map {
@@ -932,12 +948,21 @@
                 <p class="venue-card__address">
                     280 Lê Duẩn (Cầu Đạo Long 2), Phường Bảo An, tỉnh Khánh Hòa
                 </p>
+                <div class="venue-card__map-wrap">
+                    <iframe
+                        title="Bản đồ Nhà hàng Hoa Phượng"
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        src="https://www.google.com/maps?q=Nh%C3%A0+h%C3%A0ng+Hoa+Ph%C6%B0%E1%BB%A3ng,+280+L%C3%AA+Du%E1%BA%A9n,+Ph%C6%B0%E1%BB%9Dng+B%E1%BA%A3o+An,+Kh%C3%A1nh+H%C3%B2a&hl=vi&z=16&output=embed"
+                        allowfullscreen
+                    ></iframe>
+                </div>
                 <a
                     class="venue-card__map"
                     href="https://www.google.com/maps/search/?api=1&query=Nhà+hàng+Hoa+Phượng+280+Lê+Duẩn+Phường+Bảo+An+Khánh+Hòa"
                     target="_blank"
                     rel="noopener noreferrer"
-                >Xem bản đồ</a>
+                >Mở trên Google Maps</a>
             </article>
 
             <article class="venue-card reveal">
@@ -951,12 +976,21 @@
                 <p class="venue-card__address">
                     306 đường 2/9, Hòa Cường Bắc, Hải Châu, Đà Nẵng
                 </p>
+                <div class="venue-card__map-wrap">
+                    <iframe
+                        title="Bản đồ Minh Toàn Galaxy Hotel"
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        src="https://www.google.com/maps?q=Minh+To%C3%A0n+Galaxy+Hotel,+306+%C4%91%C6%B0%E1%BB%9Dng+2%2F9,+H%C3%B2a+C%C6%B0%E1%BB%9Dng+B%E1%BA%AFc,+H%E1%BA%A3i+Ch%C3%A2u,+%C4%90%C3%A0+N%E1%BA%B5ng&hl=vi&z=16&output=embed"
+                        allowfullscreen
+                    ></iframe>
+                </div>
                 <a
                     class="venue-card__map"
                     href="https://www.google.com/maps/search/?api=1&query=Minh+Toàn+Galaxy+Hotel+306+đường+2/9+Đà+Nẵng"
                     target="_blank"
                     rel="noopener noreferrer"
-                >Xem bản đồ</a>
+                >Mở trên Google Maps</a>
             </article>
         </div>
     </section>
@@ -1005,7 +1039,7 @@
                 </div>
             </div>
             <div class="gallery-item reveal-scale">
-                <img src="assets/nhinnhau.jpeg" alt="Nhìn nhau" class="gallery-img" style="object-position: center 20%;">
+                <img src="assets/nhinnhau.jpg" alt="Nhìn nhau" class="gallery-img" style="object-position: center 20%;">
                 <div class="gallery-overlay">
                     <div class="gallery-text">Nhìn nhau</div>
                 </div>
